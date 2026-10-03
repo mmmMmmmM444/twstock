@@ -17,3 +17,4 @@ classifiers = [ "License :: OSI Approved :: MIT License", "Programming Language 
 
 [tool.flit.scripts]
 twstock = "twstock.cli:run"
+twstock-scan = "twstock.scan:main"
