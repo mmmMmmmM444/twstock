@@ -102,3 +102,7 @@ ENV/
 *~
 \#.*\#
 *.\#
+
+# twstock-scan cache / output
+data/
+out/

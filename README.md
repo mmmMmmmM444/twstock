@@ -186,6 +186,30 @@ twstock.realtime.get(['2330', '2337', '2409'])  # 擷取當前三檔資訊
 ```
 
 
+## 盤後動能掃描 twstock-scan
+
+從 TWSE / TPEx 官方公開 JSON 抓上市 + 上櫃的每日行情、三大法人買賣超、融資融券，
+快取到本機 SQLite，依量價 / 技術 / 籌碼打分數排名（只用標準庫）。
+
+```
+$ twstock-scan                      # 15:00 後掃當日，否則掃前一交易日；回溯 60 個交易日
+$ twstock-scan --date 20260904      # 指定基準日
+$ twstock-scan --strategy breakout  # momentum | breakout | inst | pullback
+$ twstock-scan --watch 2330,2454    # 觀察名單一律列出
+$ twstock-scan --offline            # 只用快取
+$ twstock-scan --selftest           # 離線合成資料自我測試
+$ python -m twstock.scan --help     # 未安裝時也可直接執行
+```
+
+輸出到 `out/tw_eod_scan_<日期>_<策略>.{csv,json,md}`；快取在 `data/tw_eod.sqlite`。
+第一次跑會補抓約 60 個交易日 × 2 個市場的行情（每次請求間隔 3 秒，約 6～8 分鐘），之後每天只補當日。
+法人 / 融資通常在 16:00～21:00 後才公布，若表格提示籌碼落後，稍後加 `--refresh` 重跑。
+
+評分項目：創 20/60 日新高、多頭排列、跳空、收盤位置、量比（對 5 / 20 日均量）、
+三大法人當日與 5 日淨買占比、投信 / 外資連買天數、融資 5 日增減、券資比；
+20 日乖離過大與 20 日漲幅過大會扣分。分數只是排序，不是投資建議。
+
+
 ## 使用範例
 
 * [tw-stocker](https://github.com/mlouielu/stocker)
